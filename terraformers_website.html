@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terraformers of the Post-Human Loop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #00ff88;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ff88;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 100px 0 60px;
+            background: radial-gradient(circle at center, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+        }
+
+        .title {
+            font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #00ff88;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px #00ff88; }
+            to { text-shadow: 0 0 30px #00ff88, 0 0 40px #00ff88; }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #66ffaa;
+            margin-bottom: 10px;
+        }
+
+        .location {
+            font-size: 1rem;
+            color: #888;
+            margin-bottom: 40px;
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Content sections */
+        .section {
+            margin-bottom: 80px;
+            padding: 40px;
+            background: rgba(0, 20, 40, 0.6);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #00ff88;
+            border-bottom: 2px solid rgba(0, 255, 136, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            font-size: 1.4rem;
+            margin: 30px 0 15px;
+            color: #66ffaa;
+        }
+
+        .intro-text {
+            font-style: italic;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 20px;
+            border-left: 4px solid #00ff88;
+            margin-bottom: 30px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .research-questions {
+            background: rgba(255, 100, 0, 0.1);
+            border-left: 4px solid #ff6400;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .keyword {
+            background: rgba(0, 255, 136, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(0, 255, 136, 0.4);
+        }
+
+        .fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .field {
+            background: rgba(100, 0, 255, 0.1);
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(100, 0, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tool-category {
+            background: rgba(0, 100, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 100, 255, 0.3);
+        }
+
+        .deliverables {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .deliverable {
+            background: rgba(255, 200, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 200, 0, 0.3);
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .deliverable:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 200, 0, 0.2);
+        }
+
+        .material-gesture {
+            background: rgba(255, 0, 100, 0.1);
+            border: 1px solid rgba(255, 0, 100, 0.3);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .section {
+                padding: 20px;
+                margin-bottom: 40px;
+            }
+            
+            .tools-grid,
+            .fields,
+            .deliverables {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Breathing animation for server lichens reference */
+        .breathing {
+            animation: breathe 4.7s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <header class="header breathing">
+            <h1 class="title">Terraformers of the Post-Human Loop</h1>
+            <div class="subtitle">Colony 07 | Titan | 2981.3 AM (After Migration)</div>
+            <div class="location">Capstone Project - Research Foundations + Project Outline</div>
+            
+            <div class="intro-text">
+                The Server Lichens breathe. Every 4.7 hours, they exhale cooled methane, forming clouds that shade the algorithmic forest. Below, fungal farms regulate bio-electric memory. There are no humans here—only intentions encoded in the swarm's feedback logic.<br><br>
+                The Terraformers no longer ask what it means to be alive. They reprogram photosynthesis. They terraform with breath, with code, with decay.
+            </div>
+        </header>
+
+        <nav class="nav">
+            <div class="nav-item active" onclick="showSection('research')">Research</div>
+            <div class="nav-item" onclick="showSection('methods')">Methods</div>
+            <div class="nav-item" onclick="showSection('design')">Design</div>
+            <div class="nav-item" onclick="showSection('materials')">Materials</div>
+            <div class="nav-item" onclick="showSection('community')">Community</div>
+        </nav>
+
+        <section id="research" class="section active">
+            <h2>Research Foundation</h2>
+            
+            <div class="research-questions">
+                <h3>Core Research Questions</h3>
+                <p><strong>What does it mean to be human—or post-human—within artificial, data-driven planetary ecosystems?</strong></p>
+                <p>How can urban systems be extended or redesigned to adapt to non-Earth terrains such as Titan or Mars?</p>
+                <p>What kinds of bio-mimetic and machine-nature cohabitation systems could emerge from computationally derived planetary resources?</p>
+            </div>
+
+            <h3>Project Overview</h3>
+            <p>A speculative prototype for a game-based world-building system that envisions robot-driven planetary settlements, built on real-world datasets from extraterrestrial environments. It explores what forms of urban design, environmental response, and synthetic life might emerge in the absence of human-centered planning—while still maintaining human ethical concerns, memory, and agency.</p>
+
+            <h3>Keywords</h3>
+            <div class="keywords">
+                <span class="keyword">Planetary Ecosystems</span>
+                <span class="keyword">Global Warming</span>
+                <span class="keyword">Cyborgs</span>
+                <span class="keyword">Bio-mimicry</span>
+                <span class="keyword">Synthetic Life</span>
+                <span class="keyword">Resource Computation</span>
+            </div>
+
+            <h3>Intersecting Fields</h3>
+            <div class="fields">
+                <div class="field">Architecture</div>
+                <div class="field">Computation</div>
+                <div class="field">Astronomy</div>
+                <div class="field">Game Design</div>
+                <div class="field">Planetary Science</div>
+            </div>
+
+            <h3>Socio-Technical Problems</h3>
+            <div class="research-questions">
+                <p>• Who gets to decide what is "sustainable" beyond Earth?</p>
+                <p>• Can robot ecologies co-exist with nature if humans are no longer central?</p>
+                <p>• How do datasets drive speculative futures? What assumptions do they encode?</p>
+                <p>• Is this a form of terraforming, dataforming, or extractive simulation?</p>
+            </div>
+        </section>
+
+        <section id="methods" class="section">
+            <h2>Methods & Approach</h2>
+            
+            <h3>Computational Design Experiments</h3>
+            <div class="deliverables">
+                <div class="deliverable">Data-driven terrain generation from Titan topography</div>
+                <div class="deliverable">Simulated microclimate networks based on methane and nitrogen flows</div>
+                <div class="deliverable">Agent-based robot-nature interaction simulations</div>
+                <div class="deliverable">Hybrid architectural forms (cyborg-nature structures)</div>
+                <div class="deliverable">UI mockups for eco-feedback systems</div>
+            </div>
+
+            <h3>Research Methods</h3>
+            <p><strong>Quantitative:</strong> Real datasets from NASA/JPL (Titan, Mars topography, atmosphere, etc.), simulation-based systems</p>
+            <p><strong>Qualitative:</strong> Storytelling, ethnographic speculation, visual world-building</p>
+            <p><strong>Components:</strong> Primarily computational and visual, with written theory and spatial sketches</p>
+
+            <h3>Drawing Type: Vertical Sectional Datascape</h3>
+            <div class="research-questions">
+                <p><strong>Function:</strong></p>
+                <p>• Maps a new speculative ecology on Titan</p>
+                <p>• Situates design within planetary data, machine systems, and environmental feedback</p>
+                <p>• Argues that robotic urbanism and bio-mimicry can be critically co-designed, not simply deployed</p>
+            </div>
+        </section>
+
+        <section id="design" class="section">
+            <h2>Design & Tools</h2>
+            
+            <div class="tools-grid">
+                <div class="tool-category">
+                    <h3>Tools</h3>
+                    <p>Rhino/Grasshopper, Unity/Unreal, QGIS, Open Planetary datasets, AI generative tools</p>
+                </div>
+                
+                <div class="tool-category">
+                    <h3>Theory</h3>
+                    <p>Post-Anthropocentrism, Cyberfeminism, Design Fiction, Bio-Capital</p>
+                </div>
+                
+                <div class="tool-category">
+                    <h3>Design Tactics</h3>
+                    <p>Multi-agent simulation, energy-flow systems, eco-feedback loops</p>
+                </div>
+                
+                <div class="tool-category">
+                    <h3>Aesthetics</h3>
+                    <p>Harsh beauty, atmospheric computing, cosmic urbanism, alien biophilia</p>
+                </div>
+            </div>
+
+            <h3>Visual Representation</h3>
+            <p>Inspired by machine-generated textures, planetary data maps, AI-randomized urbanism. Aesthetic references: Annihilation, Dune (2021), System Shock interface visuals. Uses speculative visual storytelling to provoke reflection on nonhuman design logic.</p>
+
+            <h3>Project Deliverables</h3>
+            <div class="deliverables">
+                <div class="deliverable">Procedural planetary maps</div>
+                <div class="deliverable">Visual + text-based future scenarios</div>
+                <div class="deliverable">Game mechanics simulating ecosystem dependencies</div>
+                <div class="deliverable">Hybrid architectural typologies</div>
+                <div class="deliverable">Documentation of ethical + technical implications</div>
+            </div>
+
+            <h3>The Challenge</h3>
+            <div class="research-questions">
+                <p>• Accessing and integrating planetary data (especially Titan's or Mars's ecosystems)</p>
+                <p>• Balancing speculative storytelling with rigorous environmental modeling</p>
+                <p>• Learning procedural modeling + game engine workflows (Unity, Unreal)</p>
+                <p>• Creating believable yet critical aesthetics</p>
+                <p>• Positioning work clearly in dialogue with climate justice and decolonial design logics</p>
+            </div>
+        </section>
+
+        <section id="materials" class="section">
+            <h2>Material Gesture - Techno-ecological Future</h2>
+            
+            <div class="material-gesture">
+                <h3>Physical Artifacts</h3>
+                <p>A knolled kit of synthetic ecosystem components, showing how robotic and natural systems intertwine physically. A kinetic breathing sculpture simulating planetary processes driven by real data. A projection or multi-sensory installation that immerses viewers in a post-human ecology.</p>
+                
+                <div class="deliverables">
+                    <div class="deliverable">Methane collector spore</div>
+                    <div class="deliverable">Server lichen tile</div>
+                    <div class="deliverable">Bio-synthetic root node</div>
+                    <div class="deliverable">Drone egg shell</div>
+                    <div class="deliverable">Geothermal seed spike</div>
+                </div>
+            </div>
+
+            <h3>Material Composition</h3>
+            <p>Crafted from a mix of recycled plastics, bio-resins, and metallic finishes, these objects materialize the speculative infrastructures of an alien biosphere sustained by cyborg-nature hybrids.</p>
+
+            <h3>Rhetorical Function</h3>
+            <p>More than technical demonstrations, these pieces function as rhetorical devices, provoking reflection on humanity's evolving relationship with technology and the environment beyond Earth. They assert a representational position that challenges techno-solutionist narratives of space colonization by foregrounding symbiosis, fragility, and emergent complexity.</p>
+        </section>
+
+        <section id="community" class="section">
+            <h2>Community & Context</h2>
+            
+            <h3>Community of Practice</h3>
+            <p>Studio Folder (Terraforming project): planetary-scale design questions<br>
+            Kelly and Zach Weinersmith (Soonish) – speculative tech futures<br>
+            More-than-Human Design: critiquing human exceptionalism<br>
+            Black Almanac & Satellite Dev projects</p>
+
+            <h3>Historical Lineage</h3>
+            <div class="research-questions">
+                <p>• Ghost in the Shell (1978), Blame! manga – post-human, cyborg societies</p>
+                <p>• NieR:Automata, Block'hood – system-driven ecological storytelling</p>
+                <p>• Epic Spaceman's marble simulation – visualizing alien logic through data</p>
+                <p>• Terraforming Mars (board game) – resource speculation in off-world design</p>
+                <p>• Historical speculative design works by Dunne & Raby and More-than-Human design</p>
+            </div>
+
+            <h3>Situated Technology</h3>
+            <p>This project aligns with CDP themes of critical technoscience and speculative realism. It operates as both a critique of current planetary data extractivism and a speculative tool for imagining alternative eco-technological futures.</p>
+
+            <h3>Rhetorical Argument</h3>
+            <div class="intro-text">
+                Designing with planetary data is not neutral—it reflects and reproduces worldviews. This project argues that post-human ecosystems must be built ethically, not extractively. By turning robots into agents of bio-mimicry, not just efficiency, the project explores planetary coexistence without human supremacy.
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Navigation functionality
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remove active class from nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked nav item
+            event.target.classList.add('active');
+        }
+
+        // Initialize particles when page loads
+        window.addEventListener('load', createParticles);
+
+        // Add some interactivity to deliverables
+        document.addEventListener('DOMContentLoaded', function() {
+            const deliverables = document.querySelectorAll('.deliverable');
+            deliverables.forEach(deliverable => {
+                deliverable.addEventListener('mouseenter', function() {
+                    this.style.background = 'rgba(255, 200, 0, 0.2)';
+                });
+                deliverable.addEventListener('mouseleave', function() {
+                    this.style.background = 'rgba(255, 200, 0, 0.1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
